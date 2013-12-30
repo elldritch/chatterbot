@@ -23,7 +23,9 @@
     "jade": "*",
     "stylus": "*",
 
-    "socket.io": "*"
+    "socket.io": "*",
+
+    "request": "*"
   },
   "devDependencies": {
     "bower": "*",
@@ -31,6 +33,10 @@
     "grunt": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-copy": "*",
-    "grunt-contrib-clean": "*"
+    "grunt-contrib-clean": "*",
+    "grunt-mocha-test": "*",
+
+    "mocha": "*",
+    "chai": "*"
   }
 }
