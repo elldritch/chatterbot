@@ -1,14 +1,23 @@
 var api = require('../lib/api');
 
-var bot = api.cleverbot();
-bot.think('Hi', function(err, res){
+// var cbot = api.cleverbot();
+// cbot.think('Hi', function(err, res){
+//   if(err){
+//     console.error('error', err);
+//   }
+//   console.log(res);
+//   cbot.think('What about you?', function(err, res){
+//     console.log(res);
+//   });
+// });
+
+var pbot = api.pandorabot('b0dafd24ee35a477');
+console.log(pbot.vars);
+pbot.think('Hi', function(err, res){
   if(err){
     console.error('error', err);
   }
   console.log(res);
-  bot.think('What about you?', function(err, res){
-    console.log(res);
-  });
 });
 
 // var request = require('request');

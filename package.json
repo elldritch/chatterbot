@@ -25,7 +25,9 @@
 
     "socket.io": "*",
 
-    "request": "*"
+    "request": "*",
+    "node-uuid": "*",
+    "xml2js": "*"
   },
   "devDependencies": {
     "bower": "*",
