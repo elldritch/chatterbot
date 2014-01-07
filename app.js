@@ -2,7 +2,8 @@ var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
-  , socketio = require('socket.io');
+  , socketio = require('socket.io')
+  , api = require('./lib/api');
 
 var app = express();
 
@@ -14,10 +15,10 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(app.router);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'components')));
+app.use(app.router);
 
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -33,7 +34,13 @@ server.listen(app.get('port'), function(){
 });
 
 io.sockets.on('connection', function(socket) {
+  var bot = api.cleverbot();
   socket.on('message', function(data) {
-    socket.emit('message', { msg: 'Response to ' + data.msg }); // Insert AI bot response as the msg value
+    bot.think(data.msg, function(err, response){
+      if(err){
+        return console.error(err);
+      }
+      socket.emit('message', { msg: response });
+    });
   });
 });
