@@ -1,6 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  button(onclick='record()') Record
-  #chatarea
+  header.row
+    .large-12.columns
+      h1= title
+      i#record.icon.ion-ios7-mic(title='Record', onclick='toggleVoice(this)')
+  #main.row
+    .large-5.columns
+      #chatbox
+        #chatarea
