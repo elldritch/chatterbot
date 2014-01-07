@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var socketio = require('socket.io');
 
 var app = express();
 
@@ -33,6 +34,15 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+var server = http.createServer(app);
+var io = socketio.listen(server);
+
+server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+});
+
+io.sockets.on('connection', function(socket) {
+  socket.on('message', function(data) {
+    socket.emit('message', { msg: 'Response to ' + data.msg }); // Insert AI bot response as the msg value
+  });
 });

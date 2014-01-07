@@ -1,3 +1,6 @@
+
+// Web Speech API
+
 var result = '';
 var recognizing = false;
 if (!('webkitSpeechRecognition' in window)) {
@@ -18,10 +21,8 @@ if (!('webkitSpeechRecognition' in window)) {
 
     var index = event.results.length - 1;
     result = capitalize(event.results[index][0].transcript.trim());
-    $('#chatarea').append(domWrap(result));
-    var offset = $('#chatarea').height() - $('#chatbox').height();
-    if(offset > 0)
-      $('#chatbox').scrollTop(offset);
+    appendtoChat(result);
+    socket.emit('message', { msg: result });
   }
 
   recognition.onerror = function(event) {
@@ -43,8 +44,16 @@ function toggleVoice() {
   recognition.start();
 }
 
-function domWrap(s) {
-  return '<div><strong>Me:</strong> ' + s + '</div>';
+function appendtoChat(s, bot) {
+  if(bot)
+    var message = '<div><strong>Bot:</strong> ' + s + '</div>';
+  else
+    var message = '<div><strong>Me:</strong> ' + s + '</div>';
+
+  $('#chatarea').append(message);
+  var offset = $('#chatarea').height() - $('#chatbox').height();
+  if(offset > 0)
+    $('#chatbox').scrollTop(offset);
 }
 
 function capitalize(s) {
@@ -56,3 +65,10 @@ function toggleIcon(remove, add, title) {
   $('#record').addClass(add);
   $('#record').attr('title', title);
 }
+
+// WebSockets
+
+var socket = io.connect('http://localhost');
+socket.on('message', function(data) {
+  appendtoChat(data.msg, true);
+});
