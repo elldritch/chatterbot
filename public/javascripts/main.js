@@ -3,6 +3,7 @@
 
 var result = '';
 var recognizing = false;
+var voice = true;
 if (!('webkitSpeechRecognition' in window)) {
   console.log('webkitSpeechRecognition not available, use fallback');
   // insert firefox/opera fallback solution here
@@ -13,7 +14,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
   recognition.onstart = function() {
     recognizing = true;
-    toggleIcon('ion-ios7-mic', 'ion-ios7-mic-off', 'Stop Recording');
+    toggleIcon('#record', 'ion-ios7-mic', 'ion-ios7-mic-off', 'Stop Recording');
   }
 
   recognition.onresult = function(event) {
@@ -32,26 +33,46 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onend = function() {
     recognizing = false;
     result = '';
-    toggleIcon('ion-ios7-mic-off', 'ion-ios7-mic', 'Record');
+    toggleIcon('#record', 'ion-ios7-mic-off', 'ion-ios7-mic', 'Start Recording');
   }
+}
+
+// DOM Helpers
+
+function toggleRecord() {
+  if(recognizing)
+    recognition.stop();
+  else
+    recognition.start();
 }
 
 function toggleVoice() {
-  if(recognizing) {
-    recognition.stop();
-    return;
+  if(voice) {
+    voice = false;
+    toggleIcon('#voice', 'ion-volume-mute', 'ion-volume-medium', 'Turn on voice output');
   }
-  recognition.start();
+  else {
+    voice = true;
+    toggleIcon('#voice', 'ion-volume-medium', 'ion-volume-mute', 'Turn off voice output');
+  }
 }
 
 function appendtoChat(s, bot) {
-  if(bot)
-    var message = '<div><strong>Bot:</strong> ' + s + '</div>';
-  else
-    var message = '<div><strong>Me:</strong> ' + s + '</div>';
-
+  if(bot) {
+    var message = '<div class="message"><strong>Bot:</strong> ' + s + '</div>';
+    if(voice) {
+      var audio = new Audio();
+      audio.src = 'http://tts-api.com/tts.mp3?q='+encodeURIComponent($('<div>'+s+'</div>').text());
+      audio.play();
+    }
+    $('#status').text('');
+  }
+  else {
+    var message = '<div class="message"><strong>Me:</strong> ' + s + '</div>';
+    $('#status').text('thinking...');
+  }
   $('#chatarea').append(message);
-  var offset = $('#chatarea').height() - $('#chatbox').height();
+  var offset = $('#chatarea').outerHeight() - $('#chatbox').height();
   if(offset > 0)
     $('#chatbox').scrollTop(offset);
 }
@@ -60,10 +81,10 @@ function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function toggleIcon(remove, add, title) {
-  $('#record').removeClass(remove);
-  $('#record').addClass(add);
-  $('#record').attr('title', title);
+function toggleIcon(id, remove, add, title) {
+  $(id).removeClass(remove);
+  $(id).addClass(add);
+  $(id).attr('title', title);
 }
 
 // WebSockets

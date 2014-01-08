@@ -34,13 +34,13 @@ server.listen(app.get('port'), function(){
 });
 
 io.sockets.on('connection', function(socket) {
-  var bot = api.cleverbot();
+  var bot = api.pandorabot('f3b17b62de377847');
   socket.on('message', function(data) {
     bot.think(data.msg, function(err, response){
       if(err){
         return console.error(err);
       }
-      socket.emit('message', { msg: response });
+      socket.emit('message', { msg: response.result.that[0] });
     });
   });
 });

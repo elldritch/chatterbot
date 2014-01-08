@@ -4,8 +4,10 @@ block content
   header.row
     .large-12.columns
       h1= title
-      i#record.icon.ion-ios7-mic(title='Record', onclick='toggleVoice(this)')
+      i#record.icon.ion-ios7-mic(title='Start Recording', onclick='toggleRecord()')
+      i#voice.icon.ion-volume-mute(title='Turn off voice output', onclick='toggleVoice()')
   #main.row
     .large-5.columns
       #chatbox
         #chatarea
+          #status

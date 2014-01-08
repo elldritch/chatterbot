@@ -9,8 +9,9 @@ body
 header
   height: 25%
 
-#record
+.icon
   font-size: 32px
+  margin-right: 10px
 
 #main
   height: 75%
@@ -35,10 +36,18 @@ header
         background: #ccc
 
       #chatarea
+        position: relative
         display: flex
         flex-direction: column
         justify-content: flex-end
         min-height: 100%
+        padding-bottom: 16px
 
-        div
+        .message
           margin-bottom: 6px
+
+        #status
+          position: absolute
+          bottom: 0
+          font-style: italic
+          color: #777

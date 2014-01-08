@@ -9,8 +9,9 @@ body {
 header {
   height: 25%;
 }
-#record {
+.icon {
   font-size: 32px;
+  margin-right: 10px;
 }
 #main {
   height: 75%;
@@ -35,11 +36,19 @@ header {
   background: #ccc;
 }
 #main .columns #chatbox #chatarea {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   min-height: 100%;
+  padding-bottom: 16px;
 }
-#main .columns #chatbox #chatarea div {
+#main .columns #chatbox #chatarea .message {
   margin-bottom: 6px;
+}
+#main .columns #chatbox #chatarea #status {
+  position: absolute;
+  bottom: 0;
+  font-style: italic;
+  color: #777;
 }
