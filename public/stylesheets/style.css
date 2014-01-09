@@ -16,12 +16,36 @@ body {
   font-family: 'ubuntu_mono', sans-serif;
   background: #6496c4;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'ubuntu_mono', sans-serif;
+  color: #fff6db;
+}
+p,
+li {
+  color: #fff;
+}
+a {
+  color: #305792;
+}
+a:hover,
+a:focus {
+  color: #333;
+}
+.main-image {
+  float: right;
+  margin: 25px 0 0 15px;
+}
 .row {
   max-width: 51.875rem;
 }
 .header-wrapper {
   background: #fff6db;
-  padding: 50px 0 150px 0;
+  padding: 30px 0 100px 0;
   border-bottom: 8px solid #666;
 }
 .header-wrapper .controls {
@@ -47,7 +71,7 @@ body {
   border: 8px solid #666;
   background: #fff;
   position: relative;
-  top: -130px;
+  top: -80px;
 }
 #chatbox::-webkit-scrollbar {
   width: 12px;
@@ -86,4 +110,19 @@ body {
   bottom: 0;
   font-style: italic;
   color: #777;
+}
+hr {
+  border-color: #4d84b8;
+}
+footer p {
+  color: #3b5ba0;
+  font-size: 0.875rem;
+}
+footer p a {
+  color: inherit;
+  text-decoration: underline;
+}
+footer p a:hover,
+footer p a:focus {
+  color: #333;
 }

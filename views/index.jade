@@ -23,6 +23,40 @@ html(class='no-js', lang='en')
           #prompt Press the microphone button to begin talking
           #chatarea
             #status
+        img.main-image(src='/images/chatterbot.png')
+        h1 Meet Chatterbot
+        p Say hello to the world's first voice-controlled AI chat bot, you know besides that other thing Apple made. Chatterbot is based on an open sourced version of Dr. Richard Wallace's <a href='http://en.wikipedia.org/wiki/Artificial_Linguistic_Internet_Computer_Entity'>ALICE bot</a>, a highly intelligent talking robot originally created in 1995.
+        p Try talking to Chatterbot, ask it pressing questions, and learn the meaning of life. (Disclaimer: you won't actually learn the meaning of life by talking to Chatterbot, you should probably go outside or something if that's what you're looking for)
+        h2 Instructions
+        p Press the microphone button at the top right and allow the application to use your computer's microphone to enable voice recognition. Speak loudly and clearly into your microphone, you will get the best results in a quiet environment. By default, speech synthesis is enabled so you will hear an audio response from Chatterbot. Click the speaker button to disable voice output. A text transcript of your conversation will always be shown on the screen.
+        h3 Usage Notes
+        p Make sure to keep your speakers away from the microphone as this can cause Chatterbot to start talking to itself, which is actually kind of hilarious.
+        p This application's speech recognition is not perfect, and you will probably encounter textual errors in your conversation. Your mileage may vary.
+        p In order to type punctuation marks, simply speak them at the end of your words, eg. "comma", "period", "exclamation mark", and "question mark".
+        p The microphone will automatically turn off after a short period of inactivity or a prolonged period of use.
+        h3 Requirements
+    .row
+      .medium-6.columns
+        ul.disc
+          li Microphone
+          li Speakers (if using voice output)
+      .medium-6.columns
+        ul.disc
+          li Stable internet connection
+          li 
+            a(href='https://www.google.com/intl/en/chrome/browser/') Google Chrome
+            |  version 25+ (desktop only)
+    footer.row
+      .small-12.columns
+        hr
+        p
+          | &copy; 2014 
+          a(href='http://www.larryxu.com/') Larry Xu
+          |  &amp; 
+          a(href='http://www.lehaozhang.com/') Leo Zhang
+          span.right
+            | Powered by Pandorabots, Google, and TTS-API. 
+            a(href='https://github.com/The2ndOne3/chatterbot') Github
 
     script(src='/jquery/jquery.min.js')
     script(src='/socket.io/socket.io.js')
