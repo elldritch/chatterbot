@@ -16,7 +16,8 @@
   }],
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "bower install"
   },
   "dependencies": {
     "express": "*",
@@ -27,11 +28,11 @@
 
     "request": "*",
     "node-uuid": "*",
-    "xml2js": "*"
+    "xml2js": "*",
+
+    "bower": "*"
   },
-  "devDependencies": {
-    "bower": "*",
-    
+  "devDependencies": {    
     "grunt": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-copy": "*",
