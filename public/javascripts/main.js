@@ -1,3 +1,9 @@
+// WebSockets
+
+var socket = io.connect();
+socket.on('message', function(data) {
+  appendtoChat(parse(data.msg), true);
+});
 
 // Web Speech API
 
@@ -7,22 +13,16 @@ var voice = true;
 var init = false;
 var responding = false;
 
-if (!('webkitSpeechRecognition' in window)) {
-  $('#prompt').text('Your browser is not supported, please upgrade to Google Chrome version 25 or later');
-} else {
+function make_recogniser(){
   var recognition = new webkitSpeechRecognition();
   recognition.lang = 'en-US';
-  recognition.continuous = true;
+  recognition.continuous = false;
   recognition.interimResults = true;
 
   recognition.onstart = function() {
-    if(!init) {
-      init = true;
-      $('#prompt').remove();
-    }
     recognizing = true;
     toggleIcon('#record', 'ion-ios7-mic-off off', 'ion-ios7-mic', 'Stop Recording');
-  }
+  };
 
   recognition.onresult = function(event) {
     if(!responding) {
@@ -30,7 +30,7 @@ if (!('webkitSpeechRecognition' in window)) {
       for(var i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           result = parse(event.results[i][0].transcript);
-          if(result != '') {
+          if(result !== '') {
             $('#status').text('');
             appendtoChat(result);
             socket.emit('message', { msg: result });
@@ -41,23 +41,41 @@ if (!('webkitSpeechRecognition' in window)) {
           interim += event.results[i][0].transcript;
       }
       if(!responding) {
-        if(interim != '')
+        if(interim !== '')
           $('#status').text('typing: ' + interim);
         else
           $('#status').text('');
       }
     }
-  }
+  };
 
   recognition.onerror = function(event) {
     console.log('Error: ' + event.error);
-  }
+  };
 
   recognition.onend = function() {
     recognizing = false;
     result = '';
     toggleIcon('#record', 'ion-ios7-mic', 'ion-ios7-mic-off off', 'Start Recording');
-  }
+    recognition.stop();
+  };
+
+  return recognition;
+}
+
+if (!('webkitSpeechRecognition' in window)) {
+  $('#prompt').text('Your browser is not supported, please upgrade to Google Chrome version 25 or later');
+} else {
+  var recognition = make_recogniser();
+
+  recognition.onstart = function() {
+    if(!init) {
+      init = true;
+      $('#prompt').remove();
+    }
+    recognizing = true;
+    toggleIcon('#record', 'ion-ios7-mic-off off', 'ion-ios7-mic', 'Stop Recording');
+  };
 }
 
 // Audio API
@@ -82,10 +100,15 @@ audio.addEventListener('ended', function(){
 // DOM Helpers
 
 function toggleRecord() {
-  if(recognizing)
-    recognition.stop();
-  else
+  if(recognizing){
+    recognition.stop(); // This line doesn't seem to work. Throw away the instance instead.
+    recognition = make_recogniser();
+    recognizing = false;
+    toggleIcon('#record', 'ion-ios7-mic', 'ion-ios7-mic-off off', 'Start Recording');
+  }
+  else {
     recognition.start();
+  }
 }
 
 function toggleVoice() {
@@ -101,8 +124,9 @@ function toggleVoice() {
 }
 
 function appendtoChat(s, bot) {
+  var message;
   if(bot) {
-    var message = '<div class="bot message"><strong>Chatterbot:</strong> ' + s + '</div>';
+    message = '<div class="bot message"><strong>Chatterbot:</strong> ' + s + '</div>';
     if(voice)
       audio.src = 'http://tts-api.com/tts.mp3?q='+encodeURIComponent($('<div>'+s+'</div>').text());
     else
@@ -110,7 +134,7 @@ function appendtoChat(s, bot) {
     $('#status').text('');
   }
   else {
-    var message = '<div class="message"><strong>Me:</strong> ' + s + '</div>';
+    message = '<div class="message"><strong>Me:</strong> ' + s + '</div>';
     $('#status').text('thinking...');
   }
   $('#chatarea').append(message);
@@ -129,10 +153,3 @@ function toggleIcon(id, remove, add, title) {
   $(id).addClass(add);
   $(id).attr('title', title);
 }
-
-// WebSockets
-
-var socket = io.connect('http://localhost');
-socket.on('message', function(data) {
-  appendtoChat(parse(data.msg), true);
-});
