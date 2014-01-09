@@ -11,6 +11,8 @@
   ],
   "dependencies": {
     "foundation": "*",
-    "ionicons": "*"
+    "ionicons": "*",
+    "jquery": "*",
+    "modernizr": "*"
   }
 }
