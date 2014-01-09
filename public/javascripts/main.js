@@ -4,26 +4,49 @@
 var result = '';
 var recognizing = false;
 var voice = true;
+var init = false;
+var responding = false;
+
 if (!('webkitSpeechRecognition' in window)) {
-  console.log('webkitSpeechRecognition not available, use fallback');
-  // insert firefox/opera fallback solution here
+  $('#prompt').text('Your browser is not supported, please upgrade to Google Chrome version 25 or later');
 } else {
   var recognition = new webkitSpeechRecognition();
-  recognition.lang = 'en-US'; // English US, can be modified
+  recognition.lang = 'en-US';
   recognition.continuous = true;
+  recognition.interimResults = true;
 
   recognition.onstart = function() {
+    if(!init) {
+      init = true;
+      $('#prompt').remove();
+    }
     recognizing = true;
-    toggleIcon('#record', 'ion-ios7-mic', 'ion-ios7-mic-off', 'Stop Recording');
+    toggleIcon('#record', 'ion-ios7-mic-off off', 'ion-ios7-mic', 'Stop Recording');
   }
 
   recognition.onresult = function(event) {
-    console.log(event);
-
-    var index = event.results.length - 1;
-    result = capitalize(event.results[index][0].transcript.trim());
-    appendtoChat(result);
-    socket.emit('message', { msg: result });
+    if(!responding) {
+      var interim = '';
+      for(var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          result = parse(event.results[i][0].transcript);
+          if(result != '') {
+            $('#status').text('');
+            appendtoChat(result);
+            socket.emit('message', { msg: result });
+            responding = true;
+          }
+        }
+        else
+          interim += event.results[i][0].transcript;
+      }
+      if(!responding) {
+        if(interim != '')
+          $('#status').text('typing: ' + interim);
+        else
+          $('#status').text('');
+      }
+    }
   }
 
   recognition.onerror = function(event) {
@@ -33,9 +56,28 @@ if (!('webkitSpeechRecognition' in window)) {
   recognition.onend = function() {
     recognizing = false;
     result = '';
-    toggleIcon('#record', 'ion-ios7-mic-off', 'ion-ios7-mic', 'Start Recording');
+    toggleIcon('#record', 'ion-ios7-mic', 'ion-ios7-mic-off off', 'Start Recording');
   }
 }
+
+// Audio API
+
+var audio = new Audio();
+audio.addEventListener('loadedmetadata', function(){
+  audio.play();
+});
+audio.addEventListener('play', function(){
+  responding = true;
+  $('#status').text('speaking...');
+});
+audio.addEventListener('pause', function(){
+  responding = false;
+  $('#status').text('');
+});
+audio.addEventListener('ended', function(){
+  responding = false;
+  $('#status').text('');
+});
 
 // DOM Helpers
 
@@ -49,22 +91,22 @@ function toggleRecord() {
 function toggleVoice() {
   if(voice) {
     voice = false;
-    toggleIcon('#voice', 'ion-volume-mute', 'ion-volume-medium', 'Turn on voice output');
+    toggleIcon('#voice', 'ion-volume-medium', 'ion-volume-mute off', 'Turn on voice output');
+    audio.pause();
   }
   else {
     voice = true;
-    toggleIcon('#voice', 'ion-volume-medium', 'ion-volume-mute', 'Turn off voice output');
+    toggleIcon('#voice', 'ion-volume-mute off', 'ion-volume-medium', 'Turn off voice output');
   }
 }
 
 function appendtoChat(s, bot) {
   if(bot) {
-    var message = '<div class="message"><strong>Bot:</strong> ' + s + '</div>';
-    if(voice) {
-      var audio = new Audio();
+    var message = '<div class="bot message"><strong>Chatterbot:</strong> ' + s + '</div>';
+    if(voice)
       audio.src = 'http://tts-api.com/tts.mp3?q='+encodeURIComponent($('<div>'+s+'</div>').text());
-      audio.play();
-    }
+    else
+      responding = false;
     $('#status').text('');
   }
   else {
@@ -77,7 +119,8 @@ function appendtoChat(s, bot) {
     $('#chatbox').scrollTop(offset);
 }
 
-function capitalize(s) {
+function parse(s) {
+  s = s.trim();
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
@@ -91,5 +134,5 @@ function toggleIcon(id, remove, add, title) {
 
 var socket = io.connect('http://localhost');
 socket.on('message', function(data) {
-  appendtoChat(data.msg, true);
+  appendtoChat(parse(data.msg), true);
 });

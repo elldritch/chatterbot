@@ -1,41 +1,72 @@
-html {
-  height: 100%;
+@font-face {
+  font-family: 'ubuntu_mono';
+  src: url("fonts/ubuntumono-r-webfont.eot");
+  src: url("fonts/ubuntumono-r-webfont.eot?#iefix") format('embedded-opentype'), url("fonts/ubuntumono-r-webfont.woff") format('woff'), url("fonts/ubuntumono-r-webfont.ttf") format('truetype'), url("fonts/ubuntumono-r-webfont.svg#ubuntu_monoregular") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'ubuntu_mono';
+  src: url("fonts/ubuntumono-b-webfont.eot");
+  src: url("fonts/ubuntumono-b-webfont.eot?#iefix") format('embedded-opentype'), url("fonts/ubuntumono-b-webfont.woff") format('woff'), url("fonts/ubuntumono-b-webfont.ttf") format('truetype'), url("fonts/ubuntumono-b-webfont.svg#ubuntu_monobold") format('svg');
+  font-weight: bold;
+  font-style: normal;
 }
 body {
-  height: 100%;
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'ubuntu_mono', sans-serif;
+  background: #6496c4;
 }
-header {
-  height: 25%;
+.row {
+  max-width: 51.875rem;
 }
-.icon {
+.header-wrapper {
+  background: #fff6db;
+  padding: 50px 0 150px 0;
+  border-bottom: 8px solid #666;
+}
+.header-wrapper .controls {
+  margin-top: 70px;
+}
+.header-wrapper .controls .icon {
+  float: right;
+  width: 32px;
   font-size: 32px;
-  margin-right: 10px;
+  margin-right: 6px;
+  color: #444;
 }
-#main {
-  height: 75%;
+.header-wrapper .controls .icon:hover {
+  color: #222;
 }
-#main .columns {
-  height: 100%;
+.header-wrapper .controls .icon.off {
+  color: #b75f5f;
 }
-#main .columns #chatbox {
-  height: 100%;
-  max-height: 400px;
+#chatbox {
+  height: 400px;
   overflow-y: auto;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 8px solid #666;
+  background: #fff;
+  position: relative;
+  top: -130px;
 }
-#main .columns #chatbox::-webkit-scrollbar {
+#chatbox::-webkit-scrollbar {
   width: 12px;
 }
-#main .columns #chatbox::-webkit-scrollbar-track {
+#chatbox::-webkit-scrollbar-track {
   background: #e9e9e9;
 }
-#main .columns #chatbox::-webkit-scrollbar-thumb {
-  background: #ccc;
+#chatbox::-webkit-scrollbar-thumb {
+  background: #bbb;
 }
-#main .columns #chatbox #chatarea {
+#chatbox #prompt {
+  position: absolute;
+  width: 380px;
+  top: 50%;
+  left: 50%;
+  margin: -18px 0 0 -190px;
+  text-align: center;
+}
+#chatbox #chatarea {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -43,10 +74,14 @@ header {
   min-height: 100%;
   padding-bottom: 16px;
 }
-#main .columns #chatbox #chatarea .message {
-  margin-bottom: 6px;
+#chatbox #chatarea .message {
+  margin-bottom: 10px;
+  line-height: 1.2;
 }
-#main .columns #chatbox #chatarea #status {
+#chatbox #chatarea .message.bot {
+  color: #4c84b8;
+}
+#chatbox #chatarea #status {
   position: absolute;
   bottom: 0;
   font-style: italic;

@@ -1,13 +1,29 @@
-extends layout
+doctype html
+html(class='no-js', lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title= title
+    link(rel='stylesheet', href='/foundation/css/normalize.css')
+    link(rel='stylesheet', href='/foundation/css/foundation.min.css')
+    link(rel='stylesheet', href='/ionicons/css/ionicons.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='/foundation/js/vendor/custom.modernizr.js')
+  body
+    .header-wrapper
+      header.row
+        .small-8.columns
+          img(src='/images/chatterbot_logo.png')
+        .small-4.columns.controls
+          i#voice.icon.ion-volume-medium(title='Turn off voice output', onclick='toggleVoice()')
+          i#record.icon.ion-ios7-mic-off.off(title='Start Recording', onclick='toggleRecord()')
+    #main.row
+      .small-12.columns
+        #chatbox
+          #prompt Press the microphone button to begin talking
+          #chatarea
+            #status
 
-block content
-  header.row
-    .large-12.columns
-      h1= title
-      i#record.icon.ion-ios7-mic(title='Start Recording', onclick='toggleRecord()')
-      i#voice.icon.ion-volume-mute(title='Turn off voice output', onclick='toggleVoice()')
-  #main.row
-    .large-5.columns
-      #chatbox
-        #chatarea
-          #status
+    script(src='/jquery/jquery.min.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/main.js')

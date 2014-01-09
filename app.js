@@ -34,13 +34,17 @@ server.listen(app.get('port'), function(){
 });
 
 io.sockets.on('connection', function(socket) {
-  var bot = api.pandorabot('f3b17b62de377847');
+  var bot = api.pandorabot('e281ba60ae3410c8');
   socket.on('message', function(data) {
-    bot.think(data.msg, function(err, response){
-      if(err){
-        return console.error(err);
-      }
-      socket.emit('message', { msg: response.result.that[0] });
-    });
+    if(data.msg != '') {
+      bot.think(data.msg, function(err, response){
+        if(err){
+          console.error(err);
+          socket.emit('message', { msg: 'Please say that again, I could not understand.' });
+        }
+        else
+          socket.emit('message', { msg: response.result.that[0] });
+      });
+    }
   });
 });
