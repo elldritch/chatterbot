@@ -33,17 +33,25 @@ server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+io.enable('browser client minification');
+io.enable('browser client etag');
+io.enable('browser client gzip');
+io.set('log level', 1);
+
 io.sockets.on('connection', function(socket) {
   var bot = api.pandorabot('e281ba60ae3410c8');
   socket.on('message', function(data) {
+    console.log('Message received', data);
     if(data.msg !== '') {
       bot.think(data.msg, function(err, response){
         if(err){
           console.error(err, data, response);
           socket.emit('message', { msg: 'Please say that again, I could not understand.' });
         }
-        else
+        else{
+          console.log('Message sent', data);
           socket.emit('message', { msg: response.result.that[0] });
+        }
       });
     }
   });
