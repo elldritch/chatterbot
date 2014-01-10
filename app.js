@@ -10,7 +10,7 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(express.favicon());
+app.use(express.favicon(path.join(__dirname, 'public/images/favicon.ico')));
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -34,8 +34,6 @@ server.listen(app.get('port'), function(){
 });
 
 io.enable('browser client minification');
-io.enable('browser client etag');
-io.enable('browser client gzip');
 io.set('log level', 1);
 
 io.sockets.on('connection', function(socket) {
