@@ -49,7 +49,7 @@ io.sockets.on('connection', function(socket) {
           socket.emit('message', { msg: 'Please say that again, I could not understand.' });
         }
         else{
-          console.log('Message sent', data);
+          console.log('Message sent', response);
           socket.emit('message', { msg: response.result.that[0] });
         }
       });
